@@ -27,17 +27,17 @@ mksamples()
 
 set -e
 
-apt-get install dotnet-sdk-2.1=2.1.301-1
+apt-get install dotnet-sdk-2.1=2.1.803-1
 apt-get install dotnet-sdk-2.2
 
 #
 # Uncomment the following lines to get a bigger list, dynamically;
 #
-# release_url="https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases.json"
+# release_url="https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases-index.json"
 # releases=$(curl "${release_url}")
-# sdks=$(echo "${releases}" | grep version-sdk | grep -v preview | grep -v rc | grep -v display | cut -d\" -f4 | sort -u | grep '^2')
+# sdks=$(echo "${releases}" | grep latest-sdk | grep -v preview | grep -v rc | grep -v display | cut -d\" -f4 | sort -u | grep '^2')
 
-sdks=(2.1.100 2.1.4 2.1.503 2.1.801 2.2.100 2.2.105 2.2.401)
+sdks=(2.1.807 2.2.207)
 
 for sdk in $sdks; do
     # Glob matches dotnet-dev-1.x or dotnet-sdk-2.y

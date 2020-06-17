@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  devopsubuntu16.04:
+    image: devopsubuntu${VERSION:-16.04}:${TAG:-latest}
+    build: 
+      context: .
+      dockerfile: Dockerfile

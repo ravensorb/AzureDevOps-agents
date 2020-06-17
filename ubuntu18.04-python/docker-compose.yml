@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  devopsubuntu18.04-python:
+    image: devopsubuntu${VERSION:-18.04}-python:${TAG:-latest}
+    build: 
+      context: .
+      dockerfile: Dockerfile

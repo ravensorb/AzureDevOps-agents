@@ -36,6 +36,11 @@ if [ -n "$AZP_WORK" ]; then
   mkdir -p "$AZP_WORK"
 fi
 
+if [ -z "$AZP_MODE" ]; then
+  print_info 'Setting mode to defaut value: BUILD' 
+  AZP_MODE="BUILD"
+fi
+
 if [ $FORCEUPDATE == "1" ]; then
   print_info 'Forcing agent update: deleting /azp/agent folder'
   print_info 'Note: if your AZP_WORK variable is inside /azp/agent; installed tools will be deleted, too'
@@ -109,17 +114,38 @@ fi
 
 touch $STARTED_FILE
 
-./config.sh --unattended \
-  --agent "${AZP_AGENT_NAME:-$(hostname)}" \
-  --url "$AZP_URL" \
-  --auth PAT \
-  --token $(cat "$AZP_TOKEN_FILE") \
-  --pool "${AZP_POOL:-Default}" \
-  --work "${AZP_WORK:-/_work}" \
-  --replace \
-  --acceptTeeEula & wait $!
+if [ "$AZP_MODE" == "BUILD" ]; then
 
-print_info "Running Azure Pipelines agent..."
+  print_info "Configuring agent for BUILD mode..."
+
+  ./config.sh --unattended \
+    --agent "${AZP_AGENT_NAME:-$(hostname)}" \
+    --url "$AZP_URL" \
+    --auth PAT \
+    --token $(cat "$AZP_TOKEN_FILE") \
+    --pool "${AZP_POOL:-Default}" \
+    --work "${AZP_WORK:-/_work}" \
+    --replace \
+    --acceptTeeEula & wait $!
+
+elif [ "$AZP_MODE" == "DEPLOY" ]; then
+
+  print_info "Configuring agent for DEPLOY mode..."
+
+  ./config.sh --unattended \
+    --agent "${AZP_AGENT_NAME:-$(hostname)}" \
+    --url "$AZP_URL" \
+    --auth PAT \
+    --token $(cat "$AZP_TOKEN_FILE") \
+    --deploymentGroup \
+    --deploymentGroupName "${AZP_POOL:-Default}" \
+    --projectname "${AZP_PROJECT}" \
+    --addDeploymentGroupTags \
+    --deploymentGroupTags "${AZP_TAGS:-Docker}" \
+    --replace \
+    --acceptTeeEula & wait $!
+
+fi
 
 # `exec` the node runtime so it's aware of TERM and INT signals
 # AgentService.js understands how to handle agent self-update and restart

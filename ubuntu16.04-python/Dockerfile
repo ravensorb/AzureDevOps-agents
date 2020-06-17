@@ -12,5 +12,5 @@ RUN apt-get install make \
     libsqlite3-dev \
     unixodbc-dev
 
-RUN /scripts/installers/python.sh && \
-    /scripts/installers/python373.sh
+RUN /scripts/installers/python.sh \
+    && /scripts/installers/python373.sh

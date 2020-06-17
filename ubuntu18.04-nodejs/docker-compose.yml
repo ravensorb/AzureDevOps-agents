@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  devopsubuntu18.04-nodejs:
+    image: devopsubuntu${VERSION:-18.04}-nodejs:${TAG:-latest}
+    build: 
+      context: .
+      dockerfile: Dockerfile

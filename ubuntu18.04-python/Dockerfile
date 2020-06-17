@@ -18,8 +18,9 @@ RUN apt-get update && apt-get install make \
     libffi-dev \
     wget
 
-RUN /scripts/installers/python.sh && \
-    /scripts/installers/python_from_source.sh "3.6.10" && \
-    /scripts/installers/python_from_source.sh "3.7.3" && \
-    /scripts/installers/python_from_source.sh "3.7.6" && \
-    /scripts/installers/python_from_source.sh "3.8.1"
+RUN /scripts/installers/python.sh 
+#&& \
+#    /scripts/installers/python_from_source.sh "3.6.10" && \
+#    /scripts/installers/python_from_source.sh "3.7.3" && \
+#    /scripts/installers/python_from_source.sh "3.7.6" && \
+#    /scripts/installers/python_from_source.sh "3.8.1"
