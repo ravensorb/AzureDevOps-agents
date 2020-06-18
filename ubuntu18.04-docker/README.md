@@ -9,7 +9,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
 -e AZP_URL=<YOUR-ORGANIZATION-URL> \
 -e AZP_TOKEN=<YOUR-TOKEN> \
 -e AZP_POOL=<YOUR-POOL-NAME> \
--e AZP_AGENT_NAME='Ubuntu 18.04 Docker' devopsubuntu18.04-docker:latest
+-e AZP_AGENT_NAME='Ubuntu 18.04 Docker' devopsubuntu18.04-docker:${TAG:-latest}
 ```
 
 Example organization URL: `https://dev.azure.com/organization_name/`.

@@ -1,4 +1,4 @@
-FROM devopsubuntu18.04:latest
+FROM ravensorb/devopsubuntu18.04:${TAG:-latest}
 
 COPY scripts /scripts
 

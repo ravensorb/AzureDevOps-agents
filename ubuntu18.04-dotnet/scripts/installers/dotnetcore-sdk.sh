@@ -46,40 +46,41 @@ releaseNotesDetails=$(echo "${releaseNotes}" | jq 'try ."releases-index"[] | sel
 platform="linux-x64"
 for k in $releaseNotesDetails; do
     version=$(jq -r ".version" <<< "$k" | xargs)
-    # runtime=$(jq -r ".runtime" <<< "$k" | xargs)
-    # sdk=$(jq -r ".sdk" <<< "$k" | xargs)
+    runtime=$(jq -r ".runtime" <<< "$k" | xargs)
+    sdk=$(jq -r ".sdk" <<< "$k" | xargs)
     releaseUrl=$(jq -r ".releaseUrl" <<< "$k" | xargs)
     eolDate=$(jq -r ".eolDate" <<< "$k" | xargs)
 
-    printf '    Retrieving Release Details for %s (EOL: %s) from: %s\n' "$version" "$eolDate" "$releaseUrl"
+    printf '   Retrieving Release Details for %s (EOL: %s) from: %s\n' "$version" "$eolDate" "$releaseUrl"
     releaseInfo=$(curl -s "${releaseUrl}")
 
-    releaseInfoDetails=$(echo "${releaseInfo}" | jq 'try .releases[] | select(."release-version" | contains("preview") | not) | { version: ."release-version", runtime: .runtime.version, runtimeUrl: .runtime.files[].url, sdk: .sdk.version, sdkUrl: .sdk.files[].url } | select((.runtimeUrl | contains("'${platform}'")) and (.sdkUrl | contains("'${platform}'")))' -c)
+    # Lets find the download information for the current versions of the runtime and sdk
+    releaseInfoDetails=$(echo "${releaseInfo}" | jq 'try .releases[] | select(."release-version" | contains("preview") | not) | { version: ."release-version", runtime: .runtime.version, runtimeUrl: .runtime.files[].url, sdk: .sdk.version, sdkUrl: .sdk.files[].url } | select((.sdk == "'$sdk'" or .release == "'$runtime'") and (.runtimeUrl | contains("'${platform}'")) and (.sdkUrl | contains("'${platform}'")))' -c)
 
-    printf '%s\n' "----------------------------------------"
-    printf '%s\n' "$releaseInfoDetails"
-    printf '%s\n' "----------------------------------------"
+    # printf '%s\n' "----------------------------------------"
+    # printf '%s\n' "$releaseInfoDetails"
+    # printf '%s\n' "----------------------------------------"
 
     for r in $releaseInfoDetails; do
-        runtimeVersion=$(jq -r ".runtime" <<< "$r" | xargs)
-        runtimeDownloadUrl=$(jq -r ".runtimeUrl" <<< "$r" | xargs)
+        # runtimeVersion=$(jq -r ".runtime" <<< "$r" | xargs)
+        # runtimeDownloadUrl=$(jq -r ".runtimeUrl" <<< "$r" | xargs)
         sdkVersion=$(jq -r ".sdk" <<< "$r" | xargs)
         sdkDownloadUrl=$(jq -r ".sdkUrl" <<< "$r" | xargs)
 
         # printf '        RUN: %s  %s\n' "$runtimeVersion" "$runtimeDownloadUrl"
         # printf '        SDK: %s  %s\n' "$sdkVersion" "$sdkDownloadUrl"
 
-        #if ! apt-get install -y --no-install-recommends "dotnet-runtime-$version=$runtimeVersion"; then
-            # Install manually if not in package repo
+        if ! apt-get install -y --no-install-recommends "dotnet-runtime-$version=$runtimeVersion"; then
+            Install manually if not in package repo
             echo "$runtimeDownloadUrl" >> urls
             printf '      Adding runtime v%s to list to download later\n' "$runtimeVersion"
-        #fi
+        fi
 
-        #if ! apt-get install -y --no-install-recommends "dotnet-sdk-$version=$sdkVersion"; then
-            # Install manually if not in package repo
+        if ! apt-get install -y --no-install-recommends "dotnet-sdk-$version=$sdkVersion"; then
+            Install manually if not in package repo
             echo "$sdkDownloadUrl" >> urls
             printf '      Adding sdk v%s to list to download later\n' "$sdkVersion"
-        #fi
+        fi
 
         DocumentInstalledItem ".NET Core Runtime $runtimeVersion"
         DocumentInstalledItem ".NET Core SDK $sdkVersion"
@@ -95,9 +96,9 @@ if test -f "urls"; then
         dest="./tmp-$(basename -s .tar.gz $tarball)"
         echo "Extracting $tarball to $dest"
         mkdir "$dest" && tar -C "$dest" -xzf "$tarball"
-        [ -d "$dest/shared" ] && rsync -qav "$dest/shared/" /usr/share/dotnet/shared/ || echo "Directory does not exist: $dest/shared. Skipping..."
-        [ -d "$dest/host" ] && rsync -qav "$dest/host/" /usr/share/dotnet/host/ || echo "Directory does not exist: $dest/host. Skipping..."
-        [ -d "$dest/sdk" ] && rsync -qav "$dest/sdk/" /usr/share/dotnet/sdk/ || echo "Directory does not exist: $dest/sdk. Skipping..."
+        [ -d "$dest/shared" ] && rsync -qav "$dest/shared/" /usr/share/dotnet/shared/ || echo "   Directory does not exist: $dest/shared. Skipping..."
+        [ -d "$dest/host" ] && rsync -qav "$dest/host/" /usr/share/dotnet/host/ || echo "   Directory does not exist: $dest/host. Skipping..."
+        [ -d "$dest/sdk" ] && rsync -qav "$dest/sdk/" /usr/share/dotnet/sdk/ || echo "   Directory does not exist: $dest/sdk. Skipping..."
         rm -rf "$dest"
         rm "$tarball"
     done

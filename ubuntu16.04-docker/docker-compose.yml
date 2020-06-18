@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   devopsubuntu16.04-docker:
-    image: devopsubuntu${VERSION:-16.04}-docker:${TAG:-latest}
+    image: ravensorb/devopsubuntu${VERSION:-16.04}-docker:${TAG:-latest}
     build: 
       context: .
       dockerfile: Dockerfile

@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   devopsubuntu18.04:
-    image: devopsubuntu${VERSION:-18.04}:${TAG:-latest}
+    image: ravensorb/devopsubuntu${VERSION:-18.04}:${TAG:-latest}
     build: 
       context: .
       dockerfile: Dockerfile

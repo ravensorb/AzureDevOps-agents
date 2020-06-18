@@ -6,7 +6,7 @@ To use it from a Linux host having Docker installed, run it this way:
 ## Example 1; interactive run
 ```bash
 # interactively:
-docker run -it -v /var/run/docker.sock:/var/run/docker.sock devopsubuntu16.04-docker:latest /bin/bash
+docker run -it -v /var/run/docker.sock:/var/run/docker.sock devopsubuntu16.04-docker:${TAG:-latest} /bin/bash
 
 # run Azure DevOps agent:
 AZP_URL=<YOUR-ORGANIZATION-URL> \

@@ -11,6 +11,7 @@ print_info "Making all bash scripts executable"
 find . -type f -iname "*.sh" -exec chmod +x {} \;
 
 # Select the version you prefer, or both (16.04 18.04)
+TAG=latest
 for VERSION in 18.04
 do
 
@@ -18,7 +19,7 @@ do
 
   cd ubuntu$VERSION-base
 
-  docker build -t devopsubuntu$VERSION:latest .
+  docker build -t ravensorb/devopsubuntu$VERSION:$TAG .
 
   cd ..
 
@@ -26,7 +27,7 @@ do
 
   cd ubuntu$VERSION-python
 
-  docker build -t devopsubuntu$VERSION-python:latest .
+  docker build -t ravensorb/devopsubuntu$VERSION-python:$TAG .
 
   cd ..
 
@@ -34,7 +35,7 @@ do
 
   cd ubuntu$VERSION-docker
 
-  docker build -t devopsubuntu$VERSION-docker:latest .
+  docker build -t ravensorb/devopsubuntu$VERSION-docker:$TAG .
 
   cd ..
 
@@ -42,7 +43,7 @@ do
 
   cd ubuntu$VERSION-dotnet
 
-  docker build -t devopsubuntu$VERSION-dotnet:latest .
+  docker build -t ravensorb/devopsubuntu$VERSION-dotnet:$TAG .
 
   cd ..
 
@@ -50,7 +51,7 @@ do
 
   cd ubuntu$VERSION-nodejs
 
-  docker build -t devopsubuntu$VERSION-nodejs:latest .
+  docker build -t ravensorb/devopsubuntu$VERSION-nodejs:$TAG .
 
   cd ..
 done
